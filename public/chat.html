@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Welcome to my Chat application</h1>
+    <div>
+        <form id="form" >
+            <input type="text" placeholder="Enter your name" id="name"><br/>
+            <input type="text" placeholder="Message" id="message" autocomplete="false">
+
+            <button>Send</button>
+
+          
+
+        </form>
+        <div id="textarea"></div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const form=document.getElementById("form");
+  const Name=document.getElementById("name");
+  const Message=document.getElementById("message");
+  const messagearea=document.getElementById("textarea");
+
+  form.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    if(Message.value){
+        socket.emit('send name',Name.value);
+        socket.emit('send message',Message.value);
+        Message.value='';
+    }
+  });
+
+  socket.on("send name",(username)=>{
+    let name=document.createElement("p");
+    name.style.color='red';
+    name.style.fontStyle='italic';
+    name.style.textDecoration='underline';
+    name.textContent=username+"";
+    messagearea.appendChild(name)
+
+  });
+
+  socket.on("send message",(chat)=>{
+    let chatcont=document.createElement("p");
+    chatcont.textContent=chat;
+    messagearea.appendChild(chatcont)
+  })
+
+
+
+</script>
+
+
+</body>
+
+</html>
